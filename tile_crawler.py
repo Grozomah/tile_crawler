@@ -3,11 +3,8 @@
 import pygame
 import sys
 import os
-
 import random
  
-pygame.init()
-
 
 
 '''
@@ -18,12 +15,20 @@ pygame.init()
 class GameMenu():
     def __init__(self, screen, bg_color=(0,0,0), font=None, font_size=30,
                     font_color=(255, 255, 255)):
-        self.screen = screen
-        self.scr_width = self.screen.get_rect().width
-        self.scr_height = self.screen.get_rect().height
+        ## self.screen = pygame.display.set_mode((640, 480), 0, 32)
+        self.screen=screen
+        self.scr_width = screen.get_rect().width
+        self.scr_height = screen.get_rect().height
  
         self.bg_color = bg_color
         self.clock = pygame.time.Clock()
+
+
+
+        self.backdrop = pygame.image.load(os.path.join('images','tileCrawler_title.png')).convert()
+        self.backdropbox = screen.get_rect()
+
+
         
         items = ('*S*tart', '*Q*uit')
         self.items = items
@@ -44,6 +49,8 @@ class GameMenu():
  
             self.items.append([item, label, (width, height), (posx, posy)])
  
+            ## whatever
+
     def run(self):
         mainloop = True
         while mainloop:
@@ -67,17 +74,12 @@ class GameMenu():
                         mainloop = False
  
             # Redraw the background
-            self.screen.fill(self.bg_color)
- 
+            ## self.screen.fill(self.bg_color)
+            self.screen.blit(self.backdrop, self.backdropbox)
             for name, label, (width, height), (posx, posy) in self.items:
                 self.screen.blit(label, (posx, posy))
  
             pygame.display.flip()
-
-        ## print('Test')
-        ## game_items = ('PlayMe', 'Something else', 'R for points')
-        ## gm_L1 = Level_01(screen, menu_items)
-        ## gm_L1.run()
         return(2)
 
 
@@ -90,13 +92,17 @@ class GameMenu():
 class Level_01():
     def __init__(self, screen, bg_color=(0,0,0), font=None, font_size=30,
                     font_color=(255, 255, 255)):
-        self.screen = screen
+        self.screen = pygame.display.set_mode((960, 720), 0, 32)
         self.scr_width = self.screen.get_rect().width
         self.scr_height = self.screen.get_rect().height
  
         self.bg_color = bg_color
         self.clock = pygame.time.Clock()
         
+        self.backdrop = pygame.image.load(os.path.join('images','level1.png')).convert()
+        self.backdropbox = screen.get_rect()
+
+
         items = ('*R*eceive points', '*Q*uit')
         self.items = items
         self.font = pygame.font.SysFont(font, font_size)
@@ -122,26 +128,17 @@ class Level_01():
         while mainloop:
             # Limit frame speed to 50 FPS
             self.clock.tick(50)
-            ## print('game')
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    ## mainloop = False
-                    ## pygame.quit()
-                    ## sys.exit()
                     return 1
                 if event.type == pygame.KEYUP:
                     if event.key == ord('q'):
-                        ## pygame.quit()
-                        ## sys.exit()
-                        ## mainloop = False
                         return 1
                     if event.key == ord('r'):
-                        print('Pressed R!')
-                        mainloop = False
+                        print('+1 points')
  
             # Redraw the background
-            self.screen.fill(self.bg_color)
- 
+            self.screen.blit(self.backdrop, self.backdropbox)
             for name, label, (width, height), (posx, posy) in self.items:
                 self.screen.blit(label, (posx, posy))
  
@@ -158,9 +155,10 @@ class Level_01():
 ------======XXXXXXXX======------
 '''
 if __name__ == "__main__":
-    # Creating the screen
-    screen = pygame.display.set_mode((640, 480), 0, 32)
+    pygame.init()
 
+    # Creating the screen
+    screen = pygame.display.set_mode((960, 720), 0, 32)
     pygame.display.set_caption('Tile Crawler')
     
     # the game loop!
